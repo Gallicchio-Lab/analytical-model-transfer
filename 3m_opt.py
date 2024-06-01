@@ -131,8 +131,8 @@ if __name__ == '__main__':
                         help="Data file")
     parser.add_argument("-l", "--leg", type=float, default=1.0,
                         help="Value of state ID at which to plot the distributions")
-    parser.add_argument("-s", "--stateID", type=float, default=0.0,
-                        help="Value of state ID at which to plot the distributions")
+    parser.add_argument("-s", "--stateID", nargs="+", type=int, default=0,
+                        help="Values of state ID at which to plot the distributions")
     args = parser.parse_args()
     
     restart = args.restart
@@ -147,7 +147,8 @@ if __name__ == '__main__':
     datafile = args.datafile
     ncycles = args.ncycles
     nsteps = args.nsteps
-    state = args.stateID
+    states = args.stateID
+    
     leg = args.leg
 
     print("Leg = ", leg)
@@ -209,8 +210,8 @@ if __name__ == '__main__':
     range_params['elj'] = [ (1.0*beta, 12.0*beta), (12.0*beta, 40.0*beta), (10.0*beta, 30.0*beta) ]
     range_params['uce'] = [ (1.0, 8.0), (0.0, 60.0), (7.0, 40.0) ]
     range_params['nl'] = [ (3.0, 10.0), (8.0, 60.0), (8.0, 40.0) ]
-
-    learning_rate = 0.0001
+    
+    learning_rate = 0.05
 
     discard = 500
     
@@ -302,18 +303,20 @@ if __name__ == '__main__':
 
 
         # plot
-        mask = abs(sts - state) < 1.e-6
-        hist, bin_edges = np.histogram(uscv[mask]*kT, bins=30, density=True)
-        np = len(hist)
-        dx = bin_edges[1] - bin_edges[0]
-        xp = bin_edges[0:np] + 0.5*dx
-        
         import matplotlib
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
-        ax.plot(xp, hist, 'o', markersize = 1)
-        ax.plot(uscv[mask]*kT, pklv[mask]/kT, '+', markersize = 1)
-        #ax.set_xlim([-40*kT,200*kT])
+        color = iter(plt.cm.rainbow(np.linspace(0, 1, len(states) + 1)))
+        for state in states:
+            mask = abs(sts - state) < 1.e-6
+            hist, bin_edges = np.histogram(uscv[mask]*kT, bins=30, density=True)
+            nh = len(hist)
+            dx = bin_edges[1] - bin_edges[0]
+            xp = bin_edges[0:nh] + 0.5*dx
+            c = next(color)
+            ax.plot(xp, hist, 'o', markersize = 2, c=c)
+            ax.plot(uscv[mask]*kT, pklv[mask]/kT, '+', markersize = 1, c=c)
+            #ax.set_xlim([-40*kT,200*kT])
         plt.show()
 
 
@@ -389,9 +392,9 @@ if __name__ == '__main__':
                           np.any(np.isnan(gnlx)) or
                           np.any(np.isnan(gwgx)) )
                 
-                if (step % nsteps) == 0:
-                    print("Gradients:")
-                    print(gubx,gsbx,gpbx,gex,gucx,gnlx,gwgx)
+
+                print("Gradients:")
+                print(gubx,gsbx,gpbx,gex,gucx,gnlx,gwgx)
                 if notok:
                     print("Gradient error")
                     break
@@ -432,19 +435,19 @@ if __name__ == '__main__':
                     best_nl  = l_nl   
                     best_wg  = l_wg
     
-                if (step % nsteps) == 0:
-                    print(step, "Cost =", ll)
-                    print("Parameters:")
-                    print("wg = ", l_wg)
-                    results = fe_optimizer.applyunits(l_ub, l_sb, l_pb, l_elj, l_uce, l_nl)
-                    params = ["ub", "sb", "pb", "elj", "uce", "nl"]
-                    for mode, item in enumerate(results):
-                        string = ""
-                        for value in item:
-                            string = string + str(value) + " "
-                        print(params[mode] + " = [" + string + "]") 
 
-                    print("----------------------------------------------------")
+                print(step, "Cost =", ll)
+                print("Parameters:")
+                print("wg = ", l_wg)
+                results = fe_optimizer.applyunits(l_ub, l_sb, l_pb, l_elj, l_uce, l_nl)
+                params = ["ub", "sb", "pb", "elj", "uce", "nl"]
+                for mode, item in enumerate(results):
+                    string = ""
+                    for value in item:
+                        string = string + str(value) + " "
+                    print(params[mode] + " = [" + string + "]") 
+
+                print("----------------------------------------------------")
 
                 with open(basename + '.pickle', 'wb') as f:
                     pickle.dump([best_ubx, best_sbx, best_pbx, best_ex, best_ucx, best_nlx, best_wgx],f)
