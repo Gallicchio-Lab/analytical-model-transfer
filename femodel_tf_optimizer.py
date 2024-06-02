@@ -116,6 +116,11 @@ class femodel_tf_optimizer(object):
 
     def consweightx(self, wx):#forces weights to be within 0 and 1
         return tf.minimum(self.maxwx_t,tf.maximum(self.minwx_t,wx))
+
+    def consubx(self, ubx):
+        minubx = (self.min_ub_t - self.mid_params_ub_t)/self.scale_params_ub_t
+        maxubx = (self.max_ub_t - self.mid_params_ub_t)/self.scale_params_ub_t
+        return tf.minimum(maxubx, tf.maximum(minubx, ubx))
     
     def conssbx(self, sbx):
         minsbx = (self.min_sb_t - self.mid_params_sb_t)/self.scale_params_sb_t
@@ -331,7 +336,7 @@ class femodel_tf_optimizer(object):
             assert len(xparams['nl'])   == nmodes, "invalid number of x nl parameters, %d instead of %d"  % (len(xparams['nl']), nmodes)
             assert len(xparams['wg'])   == nmodes, "invalid number of x weight parameters, %d instead of %d"  % (len(xparams['wg']), nmodes)
             
-            self.ubx_t = tf.Variable(xparams['ub'],  dtype=tf.float64)
+            self.ubx_t = tf.Variable(xparams['ub'],  dtype=tf.float64, constraint=self.consubx)
             self.sbx_t = tf.Variable(xparams['sb'],  dtype=tf.float64, constraint=self.conssbx)
             self.pbx_t = tf.Variable(xparams['pb'],  dtype=tf.float64, constraint=self.conspbx)
             self.ex_t  = tf.Variable(xparams['elj'], dtype=tf.float64, constraint=self.conseljx)
@@ -340,10 +345,10 @@ class femodel_tf_optimizer(object):
             self.wgx_t = tf.Variable(xparams['wg'],  dtype=tf.float64, constraint=self.consweightx)
         else:
             zeroxpars = [0. for i in range(nmodes)]
-            self.ubx_t = tf.Variable(zeroxpars,  dtype=tf.float64)
-            self.sbx_t = tf.Variable(zeroxpars,  dtype=tf.float64)
+            self.ubx_t = tf.Variable(zeroxpars,  dtype=tf.float64, constraint=self.consubx)
+            self.sbx_t = tf.Variable(zeroxpars,  dtype=tf.float64, constraint=self.conssbx)
             self.pbx_t = tf.Variable(zeroxpars,  dtype=tf.float64, constraint=self.conspbx)
-            self.ex_t  = tf.Variable(zeroxpars, dtype=tf.float64)
+            self.ex_t  = tf.Variable(zeroxpars, dtype=tf.float64, constraint=self.conseljx)
             self.ucx_t = tf.Variable(zeroxpars, dtype=tf.float64, constraint=self.consucx)
             self.nlx_t = tf.Variable(zeroxpars,  dtype=tf.float64, constraint=self.consnlx)
             self.wgx_t = tf.Variable(zeroxpars,  dtype=tf.float64, constraint=self.consweightx)
