@@ -189,27 +189,27 @@ if __name__ == '__main__':
     reference_params['ub'] = [  -15.40*beta, -6.67*beta, -5.17*beta ]
     reference_params['sb'] = [ 3.72*beta,  4.5*beta, 5.2*beta ]
     reference_params['pb'] = [ 9.38e-7, 1.91e-8, 7.91e-12 ]
-    reference_params['elj'] = [ 10*beta, 30*beta, 30*beta ]
-    reference_params['uce'] = [ 1.0,    20.0, 20.0 ]
-    reference_params['nl']  = [   5,    30, 30 ]
+    reference_params['elj'] = [ 1.1*beta, 1.1*beta, 1.1*beta ]
+    reference_params['uce'] = [ 1.1,    1.1, 1.1 ]
+    reference_params['nl']  = [   10,    20, 30 ]
     reference_params['wg'] =  [ 1.26e-4, 2.72e-2, 9.73e-1 ]
     
     scale_params = {}
     scale_params['ub'] =  [ 1.*beta, 1.*beta, 1.*beta ]
     scale_params['sb'] =  [ 0.1*beta, 0.1*beta, 0.1*beta ]
-    scale_params['pb'] =  [ 1.e-6, 1.e-8, 1.e-12  ]
+    scale_params['pb'] =  [ 1.e-7, 1.e-8, 1.e-12  ]
     scale_params['elj'] = [ 1*beta, 1*beta, 1*beta ]
     scale_params['uce'] = [ 1, 1, 1 ]
     scale_params['nl']  = [ 1, 1, 1 ]
     scale_params['wg'] =  [ 1.e-4, 1.e-2, 1.e-1 ]
 
     range_params = {}
-    range_params['ub'] = [ (-16*beta, 30.0*beta), (-7*beta, 30.0*beta), (-6*beta, 30.0*beta) ]
-    range_params['sb'] = [ (3.0*beta, 8.0*beta), (3.0*beta, 8.0*beta), (3.0*beta, 8.0*beta) ]
+    range_params['ub'] = [ (-30*beta, 30.0*beta), (-30.0*beta, 30.0*beta), (-30.0*beta, 30.0*beta) ]
+    range_params['sb'] = [ (2.0*beta, 8.0*beta), (2.0*beta, 8.0*beta), (2.0*beta, 8.0*beta) ]
     range_params['pb'] = [ (0.0, 1.0), (0.0, 1.0), (0.0, 1.0) ]
-    range_params['elj'] = [ (1*beta, 10.0*beta), (10*beta, 100.0*beta), (10*beta, 100.0*beta)  ]
-    range_params['uce'] = [ (1.0, 10.0), (10.0, 40.0), (10.0, 40.0) ]
-    range_params['nl'] = [ (3.0, 10.0), (10, 60.0), (10, 60.0)  ]
+    range_params['elj'] = [ (1*beta, 20.0*beta), (1*beta, 20.0*beta), (1*beta, 20.0*beta) ]
+    range_params['uce'] = [ (1.0, 10.0), (1.0, 10.0), (1.0, 10.0) ]
+    range_params['nl'] = [ (3.0, 60.0), (3.0, 60.0), (3.0, 60.0) ]
     
     learning_rate = 0.05
 
@@ -291,7 +291,7 @@ if __name__ == '__main__':
             
             print("Optimized Cost =", ll)
             print("Parameters:")
-            print("wg = ", best_wg)
+            print("wg = ", best_wg/np.sum(best_wg))
             results = fe_optimizer.applyunits(best_ub, best_sb, best_pb, best_elj, best_uce, best_nl)
             params = ["ub", "sb", "pb", "elj", "uce", "nl"]
             for mode, item in enumerate(results):
@@ -318,7 +318,7 @@ if __name__ == '__main__':
             ax.plot(uscv[mask]*kT, pklv[mask]/kT, '+', markersize = 1, c=c)
             #ax.set_xlim([-40*kT,200*kT])
         #plt.show()
-        plt.savefig("plambdau.png")
+        plt.savefig(basename + ".png")
 
 
 
@@ -456,7 +456,7 @@ if __name__ == '__main__':
                 
             print("----------- End of Optimization -----------", basename);
             print("Optimized Cost =", best_loss)
-            print("wg = ", best_wg)
+            print("wg = ", best_wg/np.sum(best_wg))
             results = fe_optimizer.applyunits(best_ub, best_sb, best_pb, best_elj, best_uce, best_nl)
             params = ["ub", "sb", "pb", "elj", "uce", "nl"]
             for mode, item in enumerate(results):

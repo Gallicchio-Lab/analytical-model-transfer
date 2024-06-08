@@ -183,34 +183,33 @@ if __name__ == '__main__':
     kT = 1.986e-3*temperature # [kcal/mol]
     beta = 1./kT
 
-    nmodes = 3
+    nmodes = 1
 
     reference_params = {}
-    reference_params['ub'] = [  -18.69*beta, -12.63*beta, -6.99*beta ]
-    reference_params['sb'] = [ 3.11*beta,  3.61*beta, 3.5*beta ]
-    reference_params['pb'] = [ 2.60e-6, 1.44e-5, 4.08e-8 ]
-    reference_params['elj'] = [ 1.1*beta, 1.1*beta, 1.1*beta ]
-    reference_params['uce'] = [ 1.1,    1.1, 1.1 ]
-    reference_params['nl']  = [   10,    20, 30 ]
-    reference_params['wg'] =  [ 1.04e-2, 8.11e-2, 9.09e-1 ]
+    reference_params['ub'] = [  2.41*beta ]
+    reference_params['sb'] = [ 3.46*beta ]
+    reference_params['pb'] = [ 5.82e-3  ]
+    reference_params['elj'] = [ 1.1*beta ]
+    reference_params['uce'] = [ 1.1 ]
+    reference_params['nl']  = [   6 ]
+    reference_params['wg'] =  [ 1.0 ]
     
     scale_params = {}
-    scale_params['ub'] =  [ 1.*beta, 1.*beta, 1.*beta ]
-    scale_params['sb'] =  [ 0.1*beta, 0.1*beta, 0.1*beta ]
-    scale_params['pb'] =  [ 1.e-6, 1.e-5, 1.e-8  ]
-    scale_params['elj'] = [ 1*beta, 1*beta, 1*beta ]
-    scale_params['uce'] = [ 1, 1, 1 ]
-    scale_params['nl']  = [ 1, 1, 1 ]
-    scale_params['wg'] =  [ 1.e-2, 1.e-2, 1.e-1 ]
-
+    scale_params['ub'] =  [ 1.*beta ]
+    scale_params['sb'] =  [ 0.1*beta ]
+    scale_params['pb'] =  [ 1.e-3 ]
+    scale_params['elj'] = [ 1*beta ]
+    scale_params['uce'] = [ 1 ]
+    scale_params['nl']  = [ 1 ]
+    scale_params['wg'] =  [ 1.e-6 ]
 
     range_params = {}
-    range_params['ub'] = [ (-30*beta, 30.0*beta), (-30.0*beta, 30.0*beta), (-30.0*beta, 30.0*beta) ]
-    range_params['sb'] = [ (2.0*beta, 8.0*beta), (2.0*beta, 8.0*beta), (2.0*beta, 8.0*beta) ]
-    range_params['pb'] = [ (0.0, 1.0), (0.0, 1.0), (0.0, 1.0) ]
-    range_params['elj'] = [ (1*beta, 20.0*beta), (1*beta, 20.0*beta), (1*beta, 20.0*beta) ]
-    range_params['uce'] = [ (1.0, 10.0), (1.0, 10.0), (1.0, 10.0) ]
-    range_params['nl'] = [ (3.0, 60.0), (3.0, 60.0), (3.0, 60.0) ]
+    range_params['ub'] = [ (-10.0*beta, 30.0*beta) ]
+    range_params['sb'] = [ (2.0*beta, 5.0*beta) ]
+    range_params['pb'] = [ (0.0, 1.0) ]
+    range_params['elj'] = [ (1*beta, 4.0*beta) ]
+    range_params['uce'] = [ (1.0, 10.0) ]
+    range_params['nl'] = [ (2.5, 10.0) ]
     
     learning_rate = 0.05
 
@@ -292,7 +291,7 @@ if __name__ == '__main__':
             
             print("Optimized Cost =", ll)
             print("Parameters:")
-            print("wg = ", best_wg/np.sum(best_wg))
+            print("wg = ", best_wg)
             results = fe_optimizer.applyunits(best_ub, best_sb, best_pb, best_elj, best_uce, best_nl)
             params = ["ub", "sb", "pb", "elj", "uce", "nl"]
             for mode, item in enumerate(results):

@@ -186,18 +186,18 @@ if __name__ == '__main__':
     nmodes = 2
 
     reference_params = {}
-    reference_params['ub'] = [ 0.0*beta, 1.0*beta ]
-    reference_params['sb'] = [ 3.0*beta, 3.0*beta  ]
-    reference_params['pb'] = [ 1.5e-2,   6.5e-4]
-    reference_params['elj'] = [ 1.5*beta, 1.5*beta ]
-    reference_params['uce'] = [ 1.0, 1.0 ]
-    reference_params['nl']  = [ 2.0, 5.0 ]
-    reference_params['wg'] =  [ 0.5, 0.5 ]
+    reference_params['ub'] = [ -0.51*beta, 0.0*beta ]
+    reference_params['sb'] = [ 2.66*beta, 3.12*beta  ]
+    reference_params['pb'] = [ 1.49e-2,   6.5e-4]
+    reference_params['elj'] = [ 1.1*beta, 1.1*beta ]
+    reference_params['uce'] = [ 1.1, 1.1 ]
+    reference_params['nl']  = [ 3.0, 6.5 ]
+    reference_params['wg'] =  [ 0.418, 0.582 ]
 
     scale_params = {}
     scale_params['ub'] =  [ 1.*beta, 1.*beta ]
     scale_params['sb'] =  [ 0.1*beta, 0.1*beta ]
-    scale_params['pb'] =  [ 1.e-3, 1.e-5 ]
+    scale_params['pb'] =  [ 1.e-2, 1.e-4 ]
     scale_params['elj'] = [ 1.0*beta, 1.0*beta ]
     scale_params['uce'] = [ 0.1, 0.1 ]
     scale_params['nl']  = [ 0.1, 0.1 ]
@@ -207,9 +207,9 @@ if __name__ == '__main__':
     range_params['ub'] = [ (-3.0*beta, 10.0*beta), (-3.0*beta, 10.0*beta)  ]
     range_params['sb'] = [ (2.0*beta, 6.0*beta), (2.0*beta, 6.0*beta)  ]
     range_params['pb'] = [ (0.0, 1.0), (0.0, 1.0) ]
-    range_params['elj'] = [ (0.01*beta, 2.0*beta), (0.01*beta, 12.0*beta) ]
-    range_params['uce'] = [ (-0.99, 8.0), (-0.99, 16.0)  ]
-    range_params['nl'] = [ (2.0, 10.0), (2.0, 10.0) ]
+    range_params['elj'] = [ (1.0*beta, 4.0*beta), (1*beta, 8.0*beta) ]
+    range_params['uce'] = [ (1.0, 4.0), (1.0, 4.0)  ]
+    range_params['nl'] = [ (2.5, 10.0), (2.5, 10.0) ]
     
     """  
     reference_params = {}
@@ -319,7 +319,7 @@ if __name__ == '__main__':
             
             print("Optimized Cost =", ll)
             print("Parameters:")
-            print("wg = ", best_wg)
+            print("wg = ", best_wg/np.sum(best_wg))
             results = fe_optimizer.applyunits(best_ub, best_sb, best_pb, best_elj, best_uce, best_nl)
             params = ["ub", "sb", "pb", "elj", "uce", "nl"]
             for mode, item in enumerate(results):
@@ -346,7 +346,7 @@ if __name__ == '__main__':
             ax.plot(uscv[mask]*kT, pklv[mask]/kT, '+', markersize = 1, c=c)
             #ax.set_xlim([-40*kT,200*kT])
         #plt.show()
-        plt.savefig("temoa-h2o.png")
+        plt.savefig(basename + ".png")
 
 
 
@@ -484,7 +484,7 @@ if __name__ == '__main__':
                 
             print("----------- End of Optimization -----------", basename);
             print("Optimized Cost =", best_loss)
-            print("wg = ", best_wg)
+            print("wg = ", best_wg/np.sum(best_wg))
             results = fe_optimizer.applyunits(best_ub, best_sb, best_pb, best_elj, best_uce, best_nl)
             params = ["ub", "sb", "pb", "elj", "uce", "nl"]
             for mode, item in enumerate(results):

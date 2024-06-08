@@ -314,6 +314,7 @@ class femodel_tf_optimizer(object):
         self.max_nl_t = tf.constant([p for p in (max_nl_list)], dtype=tf.float64)
 
         # Miscellania constants
+        self.zero = tf.constant(0.0, dtype=tf.float64)
         self.pi = tf.constant(np.pi, dtype=tf.float64)
         self.eps = tf.constant(1.e-6, dtype=tf.float64) #small regularization factor
         self.sq2 = tf.constant(np.math.sqrt(2.), dtype=tf.float64)
@@ -553,7 +554,15 @@ class femodel_tf_optimizer(object):
 
         # self.cost = -tf.reduce_sum(tf.math.log(self.pkl)) + tf.reduce_sum(self.cost_pen)
 
-        self.cost = -tf.reduce_sum(tf.math.log(self.pkl))
+        #Cost penalty associated with unordered nl's
+        nldiffs = self.nl_t[1:] - self.nl_t[:-1]
+        self.penalty = tf.reduce_sum(tf.constant(10.0,dtype=tf.float64) * tf.where(nldiffs > 0, self.zero*nldiffs, tf.pow(nldiffs,2))) 
+        eljdiffs = self.elj_t[1:] - self.elj_t[:-1]
+        self.penalty += tf.reduce_sum(tf.constant(10.0,dtype=tf.float64) * tf.where(eljdiffs > 0, self.zero*eljdiffs, tf.pow(eljdiffs,2))) 
+        ucediffs = self.uce_t[1:] - self.uce_t[:-1]
+        self.penalty += tf.reduce_sum(tf.constant(10.0,dtype=tf.float64) * tf.where(ucediffs > 0, self.zero*ucediffs, tf.pow(ucediffs,2))) 
+        
+        self.cost = -tf.reduce_sum(tf.math.log(self.pkl)) + self.penalty
 
         # gradient probes
         self.gubx_t = tf.gradients(self.cost,self.ubx_t)
