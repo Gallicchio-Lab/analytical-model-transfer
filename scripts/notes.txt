@@ -1,0 +1,1 @@
+for i in temoa-h2o temoa-g* ; do echo $i ; f=`python3 ../../scripts/parms2latex.py < $i/$i.out` ;   echo "$f" ; done
