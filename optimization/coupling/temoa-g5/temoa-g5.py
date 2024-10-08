@@ -169,8 +169,6 @@ if __name__ == '__main__':
             lam = lam - 0.05
         lam_col.append(lam)
 
-    #print(sdm_data_raw.stateID)
-
     sdm_data_raw.insert(2, "Lambda", lam_col)
 
     #print(sdm_data_raw)
@@ -186,22 +184,22 @@ if __name__ == '__main__':
     nmodes = 3
 
     reference_params = {}
-    reference_params['ub'] = [  -19.75*beta, -19.85*beta, -12.39*beta ]
-    reference_params['sb'] = [ 3.67*beta,  4.83*beta, 4.34*beta ]
-    reference_params['pb'] = [ 1.63e-9, 7.18e-18, 2.26e-13 ]
+    reference_params['ub'] = [  -24.4*beta, -9.89*beta, 5.93*beta ]
+    reference_params['sb'] = [ 2.97*beta,  4.00*beta, 5.05*beta ]
+    reference_params['pb'] = [ 2.92e-9, 1.40e-9, 5.04e-28 ]
     reference_params['elj'] = [ 1.1*beta, 1.1*beta, 1.1*beta ]
     reference_params['uce'] = [ 1.1,    1.1, 1.1 ]
     reference_params['nl']  = [   10,    20, 30 ]
-    reference_params['wg'] =  [ 8.57e-6, 1.25e-2, 9.87e-1 ]
+    reference_params['wg'] =  [ 2.65e-5, 5.61e-2, 9.44e-1 ]
     
     scale_params = {}
     scale_params['ub'] =  [ 1.*beta, 1.*beta, 1.*beta ]
     scale_params['sb'] =  [ 0.1*beta, 0.1*beta, 0.1*beta ]
-    scale_params['pb'] =  [ 1.e-9, 1.e-18, 1.e-13  ]
+    scale_params['pb'] =  [ 1.e-9, 1.e-9, 1.e-28  ]
     scale_params['elj'] = [ 1*beta, 1*beta, 1*beta ]
     scale_params['uce'] = [ 1, 1, 1 ]
     scale_params['nl']  = [ 1, 1, 1 ]
-    scale_params['wg'] =  [ 1.e-6, 1.e-2, 1.e-1 ]
+    scale_params['wg'] =  [ 1.e-5, 1.e-2, 1.e-1 ]
 
 
     range_params = {}
@@ -221,25 +219,12 @@ if __name__ == '__main__':
         with open(basename + '.pickle', 'rb') as f:
             best_ubx, best_sbx, best_pbx, best_ex, best_ucx, best_nlx, best_wgx = pickle.load(f)
             xparams['ub'] = best_ubx
-            #xparams['ub'][1] = (-2*beta - reference_params['ub'][1])/scale_params['ub'][1]
             xparams['sb'] = best_sbx
-            #xparams['sb'][0] = (3.11*beta - reference_params['sb'][0])/scale_params['sb'][0]
-            #xparams['sb'][2] = (4.05 - reference_params['sb'][2])/scale_params['sb'][2]
             xparams['pb'] = best_pbx
-            #xparams['pb'][0]  = (8.72e-10 - reference_params['pb'][0])/scale_params['pb'][0]
-            #xparams['pb'][1]  = (9.0e-13 - reference_params['pb'][1])/scale_params['pb'][1]
             xparams['elj']   = best_ex
-            #xparams['elj'][0]   = (8.0*beta - reference_params['elj'][0])/scale_params['elj'][0]
-            #xparams['elj'][2]   = (15.0*beta - reference_params['elj'][2])/scale_params['elj'][2]
             xparams['uce']  = best_ucx
-            #xparams['uce'][0]  = (1.0 - reference_params['uce'][0])/scale_params['uce'][0]
-            #xparams['uce'][2]  = (14.0 - reference_params['uce'][2])/scale_params['uce'][2]
             xparams['nl']  = best_nlx
-            #xparams['nl'][1]  = (5.0 - reference_params['nl'][1])/scale_params['nl'][1]
             xparams['wg'] = best_wgx
-            #xparams['wg'][0] = (0 - reference_params['wg'][0])/scale_params['wg'][0] 
-            #xparams['wg'][1] = (0 - reference_params['wg'][1])/scale_params['wg'][1] 
-            #xparams['wg'][2] = (3.42e-34 - reference_params['wg'][2])/scale_params['wg'][2] 
     else:
         xparams['ub']  = [0. for i in range(nmodes) ]
         xparams['sb']  = [0. for i in range(nmodes) ]

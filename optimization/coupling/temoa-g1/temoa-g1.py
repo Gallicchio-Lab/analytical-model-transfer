@@ -169,8 +169,6 @@ if __name__ == '__main__':
             lam = lam - 0.05
         lam_col.append(lam)
 
-    #print(sdm_data_raw.stateID)
-
     sdm_data_raw.insert(2, "Lambda", lam_col)
 
     #print(sdm_data_raw)
@@ -186,30 +184,31 @@ if __name__ == '__main__':
     nmodes = 3
 
     reference_params = {}
-    reference_params['ub'] = [ -27.6684*beta, -16.0369*beta, -22.7318*beta ]
-    reference_params['sb'] = [ 2.6128*beta,  4.0868*beta, 4.6583*beta ]
-    reference_params['pb'] = [ 5.968e-12, 6.136e-19, 7.749e-14 ]
-    reference_params['elj'] = [ 10.945*beta, 15.3378*beta, 12.043*beta ]
-    reference_params['uce'] = [ 6.999, 40.929, 8.08 ]
-    reference_params['nl']  = [ 5.257, 59.535, 22.24 ]
-    reference_params['wg'] =  [ 1.409e-6, 1.741e-1, 1.882e-3 ]
+    reference_params['ub'] = [  -19.75*beta, -19.85*beta, -12.39*beta ]
+    reference_params['sb'] = [ 3.67*beta,  4.83*beta, 4.34*beta ]
+    reference_params['pb'] = [ 1.63e-9, 7.18e-18, 2.26e-13 ]
+    reference_params['elj'] = [ 1.1*beta, 1.1*beta, 1.1*beta ]
+    reference_params['uce'] = [ 1.1,    1.1, 1.1 ]
+    reference_params['nl']  = [   10,    20, 30 ]
+    reference_params['wg'] =  [ 8.57e-6, 1.25e-2, 9.87e-1 ]
     
     scale_params = {}
     scale_params['ub'] =  [ 1.*beta, 1.*beta, 1.*beta ]
     scale_params['sb'] =  [ 0.1*beta, 0.1*beta, 0.1*beta ]
-    scale_params['pb'] =  [ 1.e-12, 1.e-19, 1.e-14 ]
-    scale_params['elj'] = [ 0.1*beta, 0.1*beta, 0.1*beta ]
-    scale_params['uce'] = [ 0.1, 0.1, 0.1 ]
-    scale_params['nl']  = [ 0.1, 0.1, 0.1 ]
-    scale_params['wg'] =  [ 1.e-6, 1.e-1, 1.e-3 ]
+    scale_params['pb'] =  [ 1.e-9, 1.e-18, 1.e-13  ]
+    scale_params['elj'] = [ 1*beta, 1*beta, 1*beta ]
+    scale_params['uce'] = [ 1, 1, 1 ]
+    scale_params['nl']  = [ 1, 1, 1 ]
+    scale_params['wg'] =  [ 1.e-6, 1.e-2, 1.e-1 ]
+
 
     range_params = {}
-    range_params['ub'] = [ (-30.0*beta, 0.0*beta), (-25.0*beta, 50.0*beta), (-30.0*beta, 50.0*beta) ]
-    range_params['sb'] = [ (1.0*beta, 6.0*beta), (2.0*beta, 6.0*beta), (2.0*beta, 5.0*beta) ]
+    range_params['ub'] = [ (-30*beta, 30.0*beta), (-30.0*beta, 30.0*beta), (-30.0*beta, 30.0*beta) ]
+    range_params['sb'] = [ (2.0*beta, 8.0*beta), (2.0*beta, 8.0*beta), (2.0*beta, 8.0*beta) ]
     range_params['pb'] = [ (0.0, 1.0), (0.0, 1.0), (0.0, 1.0) ]
-    range_params['elj'] = [ (1.0*beta, 12.0*beta), (12.0*beta, 40.0*beta), (10.0*beta, 30.0*beta) ]
-    range_params['uce'] = [ (1.0, 8.0), (0.0, 60.0), (7.0, 40.0) ]
-    range_params['nl'] = [ (3.0, 10.0), (8.0, 60.0), (8.0, 40.0) ]
+    range_params['elj'] = [ (1*beta, 20.0*beta), (1*beta, 20.0*beta), (1*beta, 20.0*beta) ]
+    range_params['uce'] = [ (1.0, 10.0), (1.0, 10.0), (1.0, 10.0) ]
+    range_params['nl'] = [ (3.0, 60.0), (3.0, 60.0), (3.0, 60.0) ]
     
     learning_rate = 0.05
 
@@ -220,25 +219,12 @@ if __name__ == '__main__':
         with open(basename + '.pickle', 'rb') as f:
             best_ubx, best_sbx, best_pbx, best_ex, best_ucx, best_nlx, best_wgx = pickle.load(f)
             xparams['ub'] = best_ubx
-            #xparams['ub'][1] = (-2*beta - reference_params['ub'][1])/scale_params['ub'][1]
             xparams['sb'] = best_sbx
-            #xparams['sb'][0] = (3.11*beta - reference_params['sb'][0])/scale_params['sb'][0]
-            #xparams['sb'][2] = (4.05 - reference_params['sb'][2])/scale_params['sb'][2]
             xparams['pb'] = best_pbx
-            #xparams['pb'][0]  = (8.72e-10 - reference_params['pb'][0])/scale_params['pb'][0]
-            #xparams['pb'][1]  = (9.0e-13 - reference_params['pb'][1])/scale_params['pb'][1]
             xparams['elj']   = best_ex
-            #xparams['elj'][0]   = (8.0*beta - reference_params['elj'][0])/scale_params['elj'][0]
-            #xparams['elj'][2]   = (15.0*beta - reference_params['elj'][2])/scale_params['elj'][2]
             xparams['uce']  = best_ucx
-            #xparams['uce'][0]  = (1.0 - reference_params['uce'][0])/scale_params['uce'][0]
-            #xparams['uce'][2]  = (14.0 - reference_params['uce'][2])/scale_params['uce'][2]
             xparams['nl']  = best_nlx
-            #xparams['nl'][1]  = (5.0 - reference_params['nl'][1])/scale_params['nl'][1]
             xparams['wg'] = best_wgx
-            #xparams['wg'][0] = (0 - reference_params['wg'][0])/scale_params['wg'][0] 
-            #xparams['wg'][1] = (0 - reference_params['wg'][1])/scale_params['wg'][1] 
-            #xparams['wg'][2] = (3.42e-34 - reference_params['wg'][2])/scale_params['wg'][2] 
     else:
         xparams['ub']  = [0. for i in range(nmodes) ]
         xparams['sb']  = [0. for i in range(nmodes) ]
@@ -291,7 +277,7 @@ if __name__ == '__main__':
             
             print("Optimized Cost =", ll)
             print("Parameters:")
-            print("wg = ", best_wg)
+            print("wg = ", best_wg/np.sum(best_wg))
             results = fe_optimizer.applyunits(best_ub, best_sb, best_pb, best_elj, best_uce, best_nl)
             params = ["ub", "sb", "pb", "elj", "uce", "nl"]
             for mode, item in enumerate(results):
@@ -317,8 +303,8 @@ if __name__ == '__main__':
             ax.plot(xp, hist, 'o', markersize = 2, c=c)
             ax.plot(uscv[mask]*kT, pklv[mask]/kT, '+', markersize = 1, c=c)
             #ax.set_xlim([-40*kT,200*kT])
-        plt.show()
-
+        #plt.show()
+        plt.savefig(basename + ".png")
 
 
 
@@ -456,7 +442,7 @@ if __name__ == '__main__':
                 
             print("----------- End of Optimization -----------", basename);
             print("Optimized Cost =", best_loss)
-            print("wg = ", best_wg)
+            print("wg = ", best_wg/np.sum(best_wg))
             results = fe_optimizer.applyunits(best_ub, best_sb, best_pb, best_elj, best_uce, best_nl)
             params = ["ub", "sb", "pb", "elj", "uce", "nl"]
             for mode, item in enumerate(results):
